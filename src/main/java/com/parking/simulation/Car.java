@@ -25,13 +25,15 @@ public class Car implements Runnable{
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
+        // display car ID & gateID & arrival time of a car
+        System.out.println("Car " + carId + " from Gate " + gateId + " arrived at time " +  arriveTime);
         
         // send waiting message if the Park Lot is full
         if (parkingLot.getCarsCurrentlyParked() == 4)
             System.out.println("Car " + carId + " from Gate " + gateId + " waiting for a spot.");
-
+        
         // parking a car
-        System.out.println("Car " + carId + " from Gate " + gateId + " arrived at time " +  arriveTime);
         parkingLot.tryToParkCar();
 
         // simulate the time of parking
