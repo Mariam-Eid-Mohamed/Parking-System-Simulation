@@ -1,12 +1,10 @@
 package com.parking.simulation;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.concurrent.Semaphore;
 
 public class ParkingSystemSimulator {
 
@@ -27,7 +25,7 @@ public class ParkingSystemSimulator {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line); // Print each line to verify it’s being read correctly
+               // System.out.println(line); // Print each line to verify it’s being read correctly
                 String[] details = line.split(", ");
                 int gate = Integer.parseInt(details[0].split(" ")[1]);
                 int carId = Integer.parseInt(details[1].split(" ")[1]);
@@ -38,7 +36,9 @@ public class ParkingSystemSimulator {
                 Thread carThread = new Thread(car);
                 carThreads.add(carThread);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
             return;
         }
@@ -56,8 +56,7 @@ public class ParkingSystemSimulator {
                 e.printStackTrace();
             }
         }
-
         // Print final report
-       parkingLot.printReport();
+        parkingLot.printReport();
     }
 }
