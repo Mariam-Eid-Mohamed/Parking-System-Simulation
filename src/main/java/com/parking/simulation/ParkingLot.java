@@ -2,14 +2,12 @@ package com.parking.simulation;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.LinkedBlockingQueue;
 
-
     public class ParkingLot {
-        private final int totalSpots = 4; // Total parking spots
+        final int totalSpots = 4; // Total parking spots
         private int carsCurrentlyParked = 0;
         private int totalCarsServed = 0;
         private final Semaphore parkingSpots; // Semaphore to manage access
         private final LinkedBlockingQueue<Car> waitingQueue; // Queue for waiting cars
-
 
         public ParkingLot() {
             parkingSpots = new Semaphore(totalSpots);
@@ -17,7 +15,8 @@ import java.util.concurrent.LinkedBlockingQueue;
         }
 
 
-    public boolean tryToParkCar() {
+    public boolean tryToParkCar()
+    {
         try {
             // Attempt to acquire a spot
             parkingSpots.acquire();
@@ -37,6 +36,24 @@ import java.util.concurrent.LinkedBlockingQueue;
             totalCarsServed++;
         }
         parkingSpots.release();
+        notifyWaitingCars();
+    }
+//
+//    public synchronized void releaseSpot() {
+//        carsCurrentlyParked--;
+//        totalCarsServed++;
+//        parkingSpots.release();
+//        notifyWaitingCars();
+//    }
+
+    public synchronized void waitForSpot() {
+        while (carsCurrentlyParked == totalSpots) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
     public synchronized int getCarsCurrentlyParked() {
@@ -49,6 +66,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
     public synchronized int getWaitingQueueSize() {
         return waitingQueue.size();
+    }
+
+    // Notify all waiting cars that a spot is now available
+    public synchronized void notifyWaitingCars() {
+        notifyAll();
     }
 
     public void printReport() {

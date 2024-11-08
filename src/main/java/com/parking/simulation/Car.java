@@ -1,16 +1,15 @@
 package com.parking.simulation;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.Semaphore;
-import java.util.logging.Logger;
-
-public class Car implements Runnable{
-    private int carId;
-    private int gateId;
-    private int arriveTime;
-    private int parkedTime;
+public class Car implements Runnable
+{
+    private final int carId;
+    private final int gateId;
+    private final int arriveTime;
+    private final int parkedTime;
     private final ParkingLot parkingLot;
-    public Car(int carId, int gateId, int arriveTime, int parkedTime,ParkingLot parkingLot) {
+
+    public Car(int carId, int gateId, int arriveTime, int parkedTime,ParkingLot parkingLot)
+    {
         this.carId = carId;
         this.gateId = gateId;
         this.arriveTime = arriveTime;
@@ -29,13 +28,20 @@ public class Car implements Runnable{
 
         // display car ID & gateID & arrival time of a car
         System.out.println("Car " + carId + " from Gate " + gateId + " arrived at time " +  arriveTime);
-        
+
         // send waiting message if the Park Lot is full
-        if (parkingLot.getCarsCurrentlyParked() == 4)
+        if (parkingLot.getCarsCurrentlyParked() == parkingLot.totalSpots) {
             System.out.println("Car " + carId + " from Gate " + gateId + " waiting for a spot.");
-        
+
+            // Wait for a spot if the parking lot is full
+            parkingLot.waitForSpot();
+        }
+
         // parking a car
         parkingLot.tryToParkCar();
+
+        System.out.println("Car " + carId + " from Gate " + gateId + " parked. " +
+                "(Parking Status: " + parkingLot.getCarsCurrentlyParked() + " spots occupied)");
 
         // simulate the time of parking
         try {
@@ -44,11 +50,11 @@ public class Car implements Runnable{
             throw new RuntimeException(e);
         }
 
-        // releasing a car after the duration of parking
-        System.out.println("Car " + carId + " from Gate " + gateId + " parked. " +
-                "(parking status: " + parkingLot.getCarsCurrentlyParked() + " spots occupied)");
-
+        // Releasing a car after parking duration
         parkingLot.releaseSpot();
-        System.out.println("Car " + carId + " is leaving.");
+        System.out.println("Car " + carId + " from Gate " + gateId + " left after " + parkedTime + " units of time. " +
+                "(Parking Status: " + parkingLot.getCarsCurrentlyParked() + " spots occupied)");
+       // System.out.println("Car " + carId + " is leaving.");
     }
+
 }
