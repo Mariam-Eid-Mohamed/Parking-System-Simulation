@@ -9,12 +9,13 @@ public class Car implements Runnable{
     private int gateId;
     private int arriveTime;
     private int parkedTime;
-    private static ParkingLot parkingLot = new ParkingLot();
-    public Car(int carId, int gateId, int arriveTime, int parkedTime) {
+    private final ParkingLot parkingLot;
+    public Car(int carId, int gateId, int arriveTime, int parkedTime,ParkingLot parkingLot) {
         this.carId = carId;
         this.gateId = gateId;
         this.arriveTime = arriveTime;
         this.parkedTime = parkedTime;
+        this.parkingLot = parkingLot;
     }
 
     @Override
