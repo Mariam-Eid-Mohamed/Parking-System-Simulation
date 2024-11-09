@@ -1,80 +1,62 @@
 package com.parking.simulation;
+
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.LinkedBlockingQueue;
 
-    public class ParkingLot {
-        final int totalSpots = 4; // Total parking spots
-        private int carsCurrentlyParked = 0;
-        private int totalCarsServed = 0;
-        private final Semaphore parkingSpots; // Semaphore to manage access
-        private final LinkedBlockingQueue<Car> waitingQueue; // Queue for waiting cars
+public class ParkingLot {
+    final int totalSpots = 4; // Total parking spots
+    private int carsCurrentlyParked = 0;
+    private final Semaphore parkingSpots; // Semaphore to manage access to parking spots
 
-        public ParkingLot() {
-            parkingSpots = new Semaphore(totalSpots);
-            waitingQueue = new LinkedBlockingQueue<>();
-        }
+    public ParkingLot() {
+        parkingSpots = new Semaphore(totalSpots);
+    }
 
-
-    public boolean tryToParkCar()
-    {
+    // Try to park a car
+    public boolean tryToParkCar() {
         try {
-            // Attempt to acquire a spot
-            parkingSpots.acquire();
+            parkingSpots.acquire(); // Try to acquire a spot
             synchronized (this) {
-                carsCurrentlyParked++;
+                carsCurrentlyParked++; // Increment the count of cars currently parked
             }
             return true;
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore interrupted status
+            Thread.currentThread().interrupt();
             return false;
         }
     }
 
+    // Release a parking spot after a car leaves
     public void releaseSpot() {
         synchronized (this) {
             carsCurrentlyParked--;
-            totalCarsServed++;
         }
-        parkingSpots.release();
+        parkingSpots.release(); // Release the parking spot
         notifyWaitingCars();
     }
-//
-//    public synchronized void releaseSpot() {
-//        carsCurrentlyParked--;
-//        totalCarsServed++;
-//        parkingSpots.release();
-//        notifyWaitingCars();
-//    }
 
+    // Wait for a parking spot to become available
     public synchronized void waitForSpot() {
         while (carsCurrentlyParked == totalSpots) {
             try {
-                wait();
+                wait(); // Wait until a parking spot becomes available
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
     }
 
+    // Notify waiting cars that a spot is available
+    public synchronized void notifyWaitingCars() {
+        notifyAll(); // Notify all waiting cars
+    }
+
+    // Get the number of cars currently parked
     public synchronized int getCarsCurrentlyParked() {
         return carsCurrentlyParked;
     }
 
-    public synchronized int getTotalCarsServed() {
-        return totalCarsServed;
-    }
-
-    public synchronized int getWaitingQueueSize() {
-        return waitingQueue.size();
-    }
-
-    // Notify all waiting cars that a spot is now available
-    public synchronized void notifyWaitingCars() {
-        notifyAll();
-    }
-
+    // Print the current parking status
     public void printReport() {
-        System.out.println("Total cars served: " + getTotalCarsServed());
-        System.out.println("Cars currently parked: " + getCarsCurrentlyParked());
+        System.out.println("Total cars served: " + carsCurrentlyParked);
     }
 }
