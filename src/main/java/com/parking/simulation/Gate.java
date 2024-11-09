@@ -1,8 +1,7 @@
 package com.parking.simulation;
-
 import java.util.ArrayList;
 import java.util.List;
-
+//Represents each gate as a separate thread to handle car arrivals.
 class Gate implements Runnable {
     private final int gateId;
     private final List<Car> carQueue;
@@ -18,9 +17,8 @@ class Gate implements Runnable {
 
     @Override
     public void run() {
-        // Start processing cars for this gate
         for (Car car : carQueue) {
-            new Thread(car).start(); // Start a thread for each car arriving at the gate
+            new Thread(car).start();
         }
     }
 }
