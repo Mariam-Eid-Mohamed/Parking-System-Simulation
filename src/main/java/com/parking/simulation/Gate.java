@@ -21,4 +21,8 @@ class Gate implements Runnable {
             new Thread(car).start();
         }
     }
+
+    public List<Car> getCarQueue() {
+        return carQueue;
+    }
 }
