@@ -5,7 +5,10 @@ public class Car implements Runnable {
     private final int gateId;
     private final int arriveTime;
     private final int parkedTime;
+    private int waitingTime;
+    private long waitingStartTime; // New field to capture the start of waiting time
     private final ParkingLot parkingLot;
+
 
     public Car(int carId, int gateId, int arriveTime, int parkedTime, ParkingLot parkingLot) {
         this.carId = carId;
@@ -13,6 +16,21 @@ public class Car implements Runnable {
         this.arriveTime = arriveTime;
         this.parkedTime = parkedTime;
         this.parkingLot = parkingLot;
+        this.waitingTime = 0;
+    }
+    public void setWaitingTime(int waitingTime) {
+        this.waitingTime = waitingTime;
+    }
+    // Getter for carId
+    public int getCarId() {
+        return this.carId;
+    }
+
+    public int getGateId() {
+        return this.gateId;
+    }
+    public int getParkedTime(){
+        return this.parkedTime;
     }
 
     @Override
@@ -30,12 +48,20 @@ public class Car implements Runnable {
         // Send waiting message if the parking lot is full
         if (parkingLot.getCarsCurrentlyParked() == parkingLot.totalSpots) {
             System.out.println("Car " + carId + " from Gate " + gateId + " waiting for a spot.");
+            this.waitingStartTime = System.currentTimeMillis(); // Record start time of waiting
             parkingLot.waitForSpot(); // Wait until a spot becomes available
         }
 
         // Park the car
-        parkingLot.tryToParkCar();
-        System.out.println("Car " + carId + " from Gate " + gateId + " parked. (Parking Status: " + parkingLot.getCarsCurrentlyParked() + " spots occupied)");
+        parkingLot.tryToParkCar(this);
+        // Calculate waiting time if the car had to wait
+        if (waitingStartTime > 0) {
+            long currentTime = System.currentTimeMillis();
+            waitingTime = (int) ((currentTime - waitingStartTime) / 1000); // Convert to seconds
+            System.out.println("Car " + carId + " from Gate " + gateId + " parked after waiting for " + waitingTime + " units of time. (Parking Status: " + parkingLot.getCarsCurrentlyParked() + " spots occupied)");
+        } else {
+            System.out.println("Car " + carId + " from Gate " + gateId + " parked. (Parking Status: " + parkingLot.getCarsCurrentlyParked() + " spots occupied)");
+        }
 
         // Simulate parking duration
         try {
@@ -45,7 +71,10 @@ public class Car implements Runnable {
         }
 
         // Release the spot after parking duration
-        parkingLot.releaseSpot();
-        System.out.println("Car " + carId + " from Gate " + gateId + " left after " + parkedTime + " units of time. (Parking Status: " + parkingLot.getCarsCurrentlyParked() + " spots occupied)");
+        parkingLot.releaseSpot(this);
+
+
+
+
     }
 }
