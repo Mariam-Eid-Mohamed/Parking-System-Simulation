@@ -1,6 +1,5 @@
 package com.parking.simulation;
 
-import java.util.concurrent.Semaphore;
 import java.util.Queue;
 import java.util.LinkedList;
 
