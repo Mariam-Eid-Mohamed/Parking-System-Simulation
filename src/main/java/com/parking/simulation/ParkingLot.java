@@ -86,5 +86,6 @@ public class ParkingLot {
     // Print the current parking status
     public void printReport() {
         System.out.println("Total cars served: " + totalServedCars);
+        System.out.println("Current Cars in Parking: " + carsCurrentlyParked);
     }
 }
