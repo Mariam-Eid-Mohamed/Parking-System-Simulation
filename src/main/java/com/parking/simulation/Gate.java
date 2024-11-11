@@ -4,6 +4,7 @@ import java.util.List;
 //Represents each gate as a separate thread to handle car arrivals.
 class Gate implements Runnable {
     private final int gateId;
+    private int counter = 0; // counting cars that pass across each gate 
     private final List<Car> carQueue;
 
     public Gate(int gateId) {
@@ -13,6 +14,7 @@ class Gate implements Runnable {
 
     public void addCar(Car car) {
         carQueue.add(car);
+        counter++;
     }
 
     @Override
@@ -24,5 +26,8 @@ class Gate implements Runnable {
 
     public List<Car> getCarQueue() {
         return carQueue;
+    }
+    public void displayDetails() {
+        System.out.println("Gate " +  gateId + " served " + counter + " cars.");
     }
 }
