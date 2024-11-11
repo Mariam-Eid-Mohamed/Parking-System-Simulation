@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ParkingSystemSimulator {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         ParkingLot parkingLot = new ParkingLot();
         List<Gate> gates = new ArrayList<>();
@@ -48,7 +48,7 @@ public class ParkingSystemSimulator {
 
         // Start each car in its own thread and add to carThreads list
         for (Gate gate : gates) {
-            for (Car car : gate.getCarQueue) {
+            for (Car car : gate.getCarQueue()) {
                 Thread carThread = new Thread(car);
                 carThreads.add(carThread);
                 carThread.start();
