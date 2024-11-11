@@ -13,7 +13,8 @@ public class ParkingSystemSimulator {
 
         ParkingLot parkingLot = new ParkingLot();
         List<Gate> gates = new ArrayList<>();
-
+        List<Thread> carThreads = new ArrayList<>();
+        
         // Create gates
         for (int i = 1; i <= 3; i++) {
             gates.add(new Gate(i));
@@ -45,9 +46,18 @@ public class ParkingSystemSimulator {
             return;
         }
 
-        // Start all gate threads
+        // Start each car in its own thread and add to carThreads list
         for (Gate gate : gates) {
-            new Thread(gate).start();
+            for (Car car : gate.getCarQueue) {
+                Thread carThread = new Thread(car);
+                carThreads.add(carThread);
+                carThread.start();
+            }
+        }
+
+        // Wait for all car threads to finish
+        for (Thread carThread : carThreads) {
+            carThread.join();
         }
 
         // Print the final parking report after all threads are completed
