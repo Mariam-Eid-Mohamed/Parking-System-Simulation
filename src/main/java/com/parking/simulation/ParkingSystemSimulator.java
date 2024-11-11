@@ -62,5 +62,9 @@ public class ParkingSystemSimulator {
 
         // Print the final parking report after all threads are completed
         parkingLot.printReport();
+        System.out.println("Details:");
+        for (Gate gate : gates) {
+            gate.displayDetails();
+        }
     }
 }
