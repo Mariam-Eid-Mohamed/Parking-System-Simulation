@@ -6,6 +6,7 @@ import java.util.LinkedList;
 public class ParkingLot {
     final int totalSpots = 4; // Total parking spots
     private int carsCurrentlyParked = 0;
+    private int totalServedCars = 0;
     private final Semaphore parkingSpots; // Semaphore to manage access to parking spots
     private final Queue<Car> waitingQueue;  // Queue to manage waiting cars
 
@@ -47,6 +48,8 @@ public class ParkingLot {
     // Synchronized method to release a parking spot and log the status
     public synchronized void releaseSpot(Car car) {
         carsCurrentlyParked--;
+        // increment total served cars after finishing the park duration
+        totalServedCars++;
         parkingSpots.release();
 
         System.out.println("Car " + car.getCarId() + " from Gate " + car.getGateId() + " has left after parking for " + car.getParkedTime() + " units of time. (Parking Status: " + carsCurrentlyParked  + " spots occupied)");
@@ -82,6 +85,6 @@ public class ParkingLot {
 
     // Print the current parking status
     public void printReport() {
-        System.out.println("Total cars served: " + carsCurrentlyParked);
+        System.out.println("Total cars served: " + totalServedCars);
     }
 }
