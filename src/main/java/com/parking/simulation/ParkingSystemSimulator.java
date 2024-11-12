@@ -21,26 +21,23 @@ public class ParkingSystemSimulator {
         }
 
         // Reading input file from resources
-        try (InputStream inputStream = ParkingSystemSimulator.class.getResourceAsStream("/input.txt");
-             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (InputStream inputStream = ParkingSystemSimulator.class.getResourceAsStream("/input.txt")) {
+            assert inputStream != null;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 
-            if (inputStream == null) {
-                System.err.println("Could not find input.txt file in resources.");
-                return;
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] details = line.split(", ");
+                    int gateId = Integer.parseInt(details[0].split(" ")[1]);
+                    int carId = Integer.parseInt(details[1].split(" ")[1]);
+                    int arriveTime = Integer.parseInt(details[2].split(" ")[1]);
+                    int parkedTime = Integer.parseInt(details[3].split(" ")[1]);
+
+                    Car car = new Car(carId, gateId, arriveTime, parkedTime, parkingLot);
+                    gates.get(gateId - 1).addCar(car); // Assign the car to the appropriate gate
+                }
+
             }
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] details = line.split(", ");
-                int gateId = Integer.parseInt(details[0].split(" ")[1]);
-                int carId = Integer.parseInt(details[1].split(" ")[1]);
-                int arriveTime = Integer.parseInt(details[2].split(" ")[1]);
-                int parkedTime = Integer.parseInt(details[3].split(" ")[1]);
-
-                Car car = new Car(carId, gateId, arriveTime, parkedTime, parkingLot);
-                gates.get(gateId - 1).addCar(car); // Assign the car to the appropriate gate
-            }
-
         } catch (IOException e) {
             e.printStackTrace();
             return;
@@ -60,7 +57,6 @@ public class ParkingSystemSimulator {
             carThread.join();
         }
 
-        // Print the final parking report after all threads are completed
         parkingLot.printReport();
         System.out.println("Details:");
         for (Gate gate : gates) {

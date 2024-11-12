@@ -7,11 +7,9 @@ public class Semaphore {
         this.permits = initialPermits;
     }
     public synchronized void acquire() throws InterruptedException {
-        // Wait if no permits are available
         while (permits <= 0) {
             wait();
         }
-        // A permit is taken, reduce the count
         permits--;
     }
     public synchronized boolean tryAcquire() {
@@ -21,10 +19,9 @@ public class Semaphore {
         }
         return false;
     }
-    // Release a permit
+
     public synchronized void release() {
         permits++;
-        // Notify one waiting thread
         notify();
     }
 }
