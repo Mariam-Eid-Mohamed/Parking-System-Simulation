@@ -70,9 +70,9 @@ public class ParkingLot {
             }
         }
     }
-    public synchronized void notifyWaitingCars() {
-        notifyAll();
-    }
+//    public synchronized void notifyWaitingCars() {
+//        notifyAll();
+//    }
 
     public synchronized int getCarsCurrentlyParked() {
         return carsCurrentlyParked;

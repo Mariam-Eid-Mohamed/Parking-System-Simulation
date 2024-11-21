@@ -9,14 +9,16 @@ import java.util.List;
 
 public class ParkingSystemSimulator {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException
+    {
 
         ParkingLot parkingLot = new ParkingLot();
         List<Gate> gates = new ArrayList<>();
         List<Thread> carThreads = new ArrayList<>();
         
         // Create gates
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 3; i++)
+        {
             gates.add(new Gate(i));
         }
 
@@ -52,7 +54,6 @@ public class ParkingSystemSimulator {
             }
         }
 
-        // Wait for all car threads to finish
         for (Thread carThread : carThreads) {
             carThread.join();
         }

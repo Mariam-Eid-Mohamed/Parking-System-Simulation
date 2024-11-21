@@ -57,9 +57,6 @@ public class Car implements Runnable {
         {
             long currentTime = System.currentTimeMillis();
            waitingTime = (int) Math.ceil((currentTime - waitingStartTime) / 1000.0);
-
-           // System.out.println("\nWaiting Start Time: " + waitingStartTime + ", Current Time: " + currentTime);
-           // System.out.println("\nCalculated Waiting Time: " + waitingTime);
             System.out.println("Car " + carId + " from Gate " + gateId + " parked after waiting for " + waitingTime + " units of time. (Parking Status: " + parkingLot.getCarsCurrentlyParked() + " spots occupied)");
         }
 
